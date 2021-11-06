@@ -37,7 +37,7 @@ class SearchBar extends Component {
             <h1>Financier</h1>
         
             <input onChange={this.onChangeInput}></input>
-            <button onClick={getStockData(inputValue)}>Stock Data</button>
+            {/* <button onClick={getStockData(inputValue)}>Stock Data</button> */}
             <button onClick={getStockRevenue(inputValue)}>5Y Revenue</button>
         </div>
         );

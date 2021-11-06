@@ -12,8 +12,11 @@ const initialState = {
     pbRatio:15,
     psRatio:20,
     peRatio:49,
+    
   },
+  revenues: [],
   hasData: false,
+  // revenueRequest: false,
   isError: false,
 };
 
@@ -36,6 +39,13 @@ const noStockData = () => {
   return {
     type: 'NO_STOCK_DATA',
     
+  }
+};
+
+const addStockRevenues = (revenueHistory) => {
+  return {
+    type: 'ADD_STOCK_REVENUE',
+    payload: revenueHistory
   }
 };
 
@@ -84,6 +94,16 @@ const stockReducer = (state = initialState, action) => {
           isError: true, 
         };
     
+    case "ADD_STOCK_REVENUE":  
+      const revenueHistory = action.payload;
+      return {
+        ...state,
+          revenues: revenueHistory,
+          hasData: false,
+          isError: false, 
+      };
+        
+    
     default:
         return state;
   }
@@ -103,7 +123,7 @@ store.subscribe(() => console.log(store.getState()));
 // store.dispatch(increment());
 
 export const getStockData = (ticker) => (dispatch) => {
-  console.log(ticker)
+  //console.log(ticker)
   // store.dispatch(addStockData(ticker));
   casesAPI
     .getBasicFinancials(ticker)
@@ -122,11 +142,11 @@ export const getStockData = (ticker) => (dispatch) => {
 };
 
 export const getStockRevenue = (ticker) => (dispatch) => {
-  console.log(ticker)
+  // console.log(ticker)
   // store.dispatch(addStockData(ticker));
   casesAPI
     .getRevenues(ticker)
-    .then((res)=> console.log(res.data))
+    .then((res)=> store.dispatch(addStockRevenues(res.data)))
     .catch((req)=> console.log(req));
     
 };
