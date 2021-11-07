@@ -14,7 +14,7 @@ const initialState = {
     peRatio:49,
     
   },
-  revenues: [],
+  revenues: {},
   hasData: false,
   // revenueRequest: false,
   isError: false,
@@ -43,9 +43,15 @@ const noStockData = () => {
 };
 
 const addStockRevenues = (revenueHistory) => {
+  const revenueHistoryProcessed = {}
+  revenueHistory.slice(0,5).map(item =>
+    {
+      return revenueHistoryProcessed[item.calendarYear] = item.revenue
+    })
+  
   return {
     type: 'ADD_STOCK_REVENUE',
-    payload: revenueHistory
+    payload: revenueHistoryProcessed
   }
 };
 
