@@ -16,7 +16,7 @@ const initialState = {
   },
   revenues: {},
   hasData: false,
-  // revenueRequest: false,
+  hasRevenues: false,
   isError: false,
 };
 
@@ -105,8 +105,9 @@ const stockReducer = (state = initialState, action) => {
       return {
         ...state,
           revenues: revenueHistory,
-          hasData: false,
-          isError: false, 
+          
+          hasRevenues: true,
+
       };
         
     
