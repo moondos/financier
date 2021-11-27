@@ -5,11 +5,12 @@ import { NavLink, Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
         
 class SearchBar extends Component {
+
     constructor() {
         super();
         this.state = {
         inputValue:'',
-    
+        
         }
     }
     
@@ -32,19 +33,24 @@ class SearchBar extends Component {
     
     render() {
         const { inputValue } = this.state;
+
         return (
         <div className="App">
             <h1>Financier</h1>
         
             <input onChange={this.onChangeInput}></input>
-            <button onClick={getStockData(inputValue)}>Stock Data</button>
-            <button onClick={getStockRevenue(inputValue)}>5Y Revenue</button>
+            <button onClick={getStockData(inputValue)} >Stock Data</button>
+
+            <button onClick={getStockRevenue(inputValue)} >5Y Revenue</button>
         </div>
         );
     }
     }
 
 const mapStateToProps = (state) => {
-    return state;
+    return {
+        ticker: state.ticker
+    };
 };
+
 export default connect(mapStateToProps, { getStockData })(SearchBar);

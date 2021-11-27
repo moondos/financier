@@ -5,6 +5,7 @@ import Revenues from "./Revenues"
 
 const RevenuesContainer = (props) => {
     return <Revenues 
+        ticker={props.ticker}
         revenues={props.revenues} 
         hasRevenues={props.hasRevenues}
         // hasData={props.hasData} 
@@ -17,6 +18,7 @@ const mapStateToProps = (state) => {
         // stockData: state.stockData, 
         // hasData: state.hasData,
         // isError: state.isError,
+        ticker: state.ticker, 
         revenues: state.revenues,
         hasRevenues: state.hasRevenues,
     };

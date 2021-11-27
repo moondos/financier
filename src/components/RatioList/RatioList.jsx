@@ -2,14 +2,14 @@ import React from "react";
 import "./RatioList.css";
 
 
-const RadioList = ({ stockData, hasData, isError }) => {
+const RadioList = ({ ticker, stockData, hasData, isError }) => {
   
   return (
     <div className="data_container">
       
         {hasData && (
             <div className="data_table">
-                <p>Ticker: {stockData.ticker}</p>
+                <p>Ticker: {ticker}</p>
                 <p>Current Ratio: {stockData.currentRatio}</p>
                 <p>Asset Turnover: {stockData.assetTurnover}</p>
                 <p>ROE: {stockData.roe}</p>

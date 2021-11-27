@@ -3,7 +3,7 @@ import "./Revenues.css";
 import {Bar} from 'react-chartjs-2';
 
 
-const Revenues = ({ revenues, hasRevenues }) => {
+const Revenues = ({ ticker, revenues, hasRevenues }) => {
   
 
 
@@ -18,7 +18,7 @@ const Revenues = ({ revenues, hasRevenues }) => {
             labels: Object.keys(revenues),
             datasets: [
               {
-                label: '# of Votes',
+                label: ticker,
                 data: Object.keys(revenues).map(function(key){
                   return revenues[key];
               }),

@@ -3,15 +3,16 @@ import { casesAPI } from '../api/api.js'
 // STORE -> GLOBALIZED STATE
 
 const initialState = {
+  ticker:"",
   stockData: {
-    ticker:"INMD",
-    currentRatio:2.0,
-    assetTurnover:0.7,
-    roe:0.34,
-    debtEquity:0,
-    pbRatio:15,
-    psRatio:20,
-    peRatio:49,
+    
+    currentRatio:"",
+    assetTurnover:"",
+    roe:"",
+    debtEquity:"",
+    pbRatio:"",
+    psRatio:"",
+    peRatio:"",
     
   },
   revenues: {},
@@ -42,16 +43,16 @@ const noStockData = () => {
   }
 };
 
-const addStockRevenues = (revenueHistory) => {
+const addStockRevenues = (revenueHistory, ticker) => {
   const revenueHistoryProcessed = {}
   revenueHistory.slice(0,5).map(item =>
     {
       return revenueHistoryProcessed[item.calendarYear] = item.revenue
     })
-  
+  const revenueHistoryProcessedTicker = {symbol: ticker, revenueHistoryProcessed: revenueHistoryProcessed}
   return {
     type: 'ADD_STOCK_REVENUE',
-    payload: revenueHistoryProcessed
+    payload: revenueHistoryProcessedTicker
   }
 };
 
@@ -63,7 +64,8 @@ const stockReducer = (state = initialState, action) => {
       const newStockData = action.payload;
       return {
           ...state,
-          stockData: {ticker : newStockData.symbol, 
+          ticker : newStockData.symbol,
+          stockData: { 
                       currentRatio : newStockData.metric.currentRatioAnnual,
                       assetTurnover: newStockData.metric.assetTurnoverAnnual, 
                       roe: newStockData.metric.roeRfy,
@@ -73,6 +75,7 @@ const stockReducer = (state = initialState, action) => {
                       peRatio: newStockData.metric.peInclExtraTTM,
                       },
           hasData: true,
+          hasRevenues: false,
           isError: false,
         }
     case "ADD_METRIC_ONLY":
@@ -80,7 +83,8 @@ const stockReducer = (state = initialState, action) => {
       const MetricOnlyData = action.payload;
       return {
           ...state,
-          stockData: {ticker : MetricOnlyData.symbol, 
+          ticker : MetricOnlyData.symbol, 
+          stockData: {
                       currentRatio : MetricOnlyData.metric.currentRatioAnnual,
                       assetTurnover: MetricOnlyData.metric.assetTurnoverAnnual, 
                       roe: MetricOnlyData.metric.roeRfy,
@@ -104,8 +108,9 @@ const stockReducer = (state = initialState, action) => {
       const revenueHistory = action.payload;
       return {
         ...state,
-          revenues: revenueHistory,
-          
+          ticker : revenueHistory.symbol, 
+          revenues: revenueHistory.revenueHistoryProcessed,
+          hasData: false,
           hasRevenues: true,
 
       };
@@ -132,7 +137,12 @@ store.subscribe(() => console.log(store.getState()));
 export const getStockData = (ticker) => (dispatch) => {
   //console.log(ticker)
   // store.dispatch(addStockData(ticker));
-  casesAPI
+  if (ticker == initialState.ticker && initialState.hasData == true) {
+    
+  }
+  
+  else {
+    casesAPI
     .getBasicFinancials(ticker)
     .then((res)=> { if (Object.keys(res.data.metric).length !== 0 && Object.keys(res.data.series).length !== 0) {
           store.dispatch(addStockData(res.data))
@@ -145,16 +155,21 @@ export const getStockData = (ticker) => (dispatch) => {
         }
     })
     .catch((req)=> console.log(req));
+  }
     
 };
 
 export const getStockRevenue = (ticker) => (dispatch) => {
   // console.log(ticker)
   // store.dispatch(addStockData(ticker));
-  casesAPI
+  if (ticker != initialState.ticker || initialState.hasRevenues == false) {
+    casesAPI
     .getRevenues(ticker)
-    .then((res)=> store.dispatch(addStockRevenues(res.data)))
+    .then((res)=> store.dispatch(addStockRevenues(res.data, ticker)))
     .catch((req)=> console.log(req));
+  }
+
+  
     
 };
 
